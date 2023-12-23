@@ -1,5 +1,5 @@
 const vision = require('@google-cloud/vision');
-
+const { ImageAnnotatorClient } = require('@google-cloud/vision');
 const CREDENTIALS = JSON.parse(JSON.stringify(
     {
         "type": "service_account",
@@ -23,15 +23,76 @@ const CONFIG = {
         client_email: CREDENTIALS.client_email
     }
 };
+//const vision = require('@google-cloud/vision');
 
+
+
+// Create a client with the specified configuration
 const client = new vision.ImageAnnotatorClient(CONFIG);
 
+// Function to detect text from an image and extract relevant information
+async function detectText(imagePath) {
+  try {
+    // Perform text detection on the local file with language hint set to English
+    const [result] = await client.textDetection(imagePath, {
+      imageContext: {
+        languageHints: ["en-t-i0-handwrit"],
+      },
+    });
 
+    const detections = result.textAnnotations;
 
-const detectText = async (file_path) => {
+    if (!detections || detections.length === 0) {
+      console.log('No text detected.');
+      return null;
+    }
+    detections.forEach(el=>console.log(el.description));
+console.log("stopppppppp")
+   // console.log(JSON.stringify(detections, null, 2));
 
-    let [result] = await client.textDetection(file_path);
-    console.log(result.fullTextAnnotation.text);
-};
+    // Extracting relevant information from the detected text
+    const identificationNumber = detections[0].description;
+    const name = detections[1].description;
+    const lastName = detections[2].description;
+    const dateOfBirth = detections[3].description;
+    const dateOfIssue = detections[4].description;
+    const dateOfExpiry = detections[5].description;
 
-detectText('Sample2.jpg');
+    // Creating the JSON output
+    const outputJson = {
+      identification_number: identificationNumber,
+      name: name,
+      last_name: lastName,
+      'date-of-birth': dateOfBirth,
+      'date-of-issue': dateOfIssue,
+      'date-of-expiry': dateOfExpiry,
+    };
+
+    return outputJson;
+  } catch (error) {
+    console.error('Error:', error);
+    return null;
+  }
+}
+
+// Example usage with a local image file
+const imagePath = 'card.jpg_large';
+detectText(imagePath)
+  .then(result => {
+    if (result) {
+      console.log(result);
+    } else {
+      console.log('No text detected.');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+//const detectText = async (file_path) => {
+//
+//    let [result] = await client.textDetection(file_path);
+//    console.log(result.fullTextAnnotation.text);
+//};
+//
+//detectText('Sample2.jpg');
