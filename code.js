@@ -34,4 +34,4 @@ const detectText = async (file_path) => {
     console.log(result.fullTextAnnotation.text);
 };
 
-detectText('sample.jpg');
+detectText('Sample2.jpg');
