@@ -55,19 +55,24 @@ callAnnotateImage = async () => {
       const extractedText = result.fullTextAnnotation.text;
 
       // Define a regular expression pattern to match the desired information
-      const pattern = /Thai National ID Card([\s\S]*?)Name([\s\S]*?)Last name([\s\S]*?)Date of Birth([\s\S]*?)Date of Issue([\s\S]*?)Date of Expiry([\s\S]*?)(?=\S|$)/;
+      const pattern = /Thai National ID Card([\s\S]*?)Name([\s\S]*?)Last name ([A-Za-z]+)([\s\S]*?)Date of Birth([\s\S]*?)Date of Issue([\s\S]*?)Date of Expiry([\s\S]*?)(?=\S|$)/;
 
       // Use the pattern to extract matches from the text
       const matches = extractedText.match(pattern);
-
       if (matches) {
+        // Extracted values may contain extra characters, so we need to clean them up
+        const cleanUp = (value) => value.replace(/[\n\s]+/g, ' ').trim();
+
+        // Modify the cleanUp function to include substring operation for the first 16 characters
+        const cleanUpWithSubstring = (value, length) => cleanUp(value).substring(0, length);
+
         const outputJson = {
-          identification_number: matches[1].trim(),
-          name: matches[2].trim(),
-          last_name: matches[3].trim(),
-          'date-of-birth': matches[4].trim(),
-          'date-of-issue': matches[5].trim(),
-          'date-of-expiry': matches[6].trim(),
+          identification_number: cleanUpWithSubstring(matches[1], 16),
+          name: cleanUp(matches[2]),
+          last_name: cleanUp(matches[3]),
+          'date-of-birth': cleanUpWithSubstring(matches[5],12),
+          'date-of-issue': cleanUp(matches[5]),
+          'date-of-expiry': cleanUp(matches[4]), // Note: Update this line if needed
         };
 
         console.log(JSON.stringify(outputJson, null, 2));
