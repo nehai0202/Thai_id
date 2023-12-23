@@ -1,4 +1,5 @@
 const vision = require('@google-cloud/vision');
+const fs = require('fs');
 const { ImageAnnotatorClient } = require('@google-cloud/vision');
 const CREDENTIALS = JSON.parse(JSON.stringify(
     {
@@ -29,66 +30,59 @@ const CONFIG = {
 
 // Create a client with the specified configuration
 const client = new vision.ImageAnnotatorClient(CONFIG);
+callAnnotateImage = async () => {
+  var imageFile = fs.readFileSync('card.jpg_large');
+  var encoded = Buffer.from(imageFile).toString('base64');
 
-// Function to detect text from an image and extract relevant information
-async function detectText(imagePath) {
-  try {
-    // Perform text detection on the local file with language hint set to English
-    const [result] = await client.textDetection(imagePath, {
-      imageContext: {
-        languageHints: ["en-t-i0-handwrit"],
+  const request = {
+      "image": {
+          "content": encoded
       },
-    });
+      "features": [
+        {
+          "type": "TEXT_DETECTION"
+        }
+      ],
+      "imageContext": {
+        "languageHints": ["en-t-i0-handwrit"]
+      }
+  };
 
-    const detections = result.textAnnotations;
+  try {
+    const [result] = await client.annotateImage(request);
 
-    if (!detections || detections.length === 0) {
-      console.log('No text detected.');
-      return null;
-    }
-    detections.forEach(el=>console.log(el.description));
-console.log("stopppppppp")
-   // console.log(JSON.stringify(detections, null, 2));
+    if (result.fullTextAnnotation && result.fullTextAnnotation.text) {
+      const extractedText = result.fullTextAnnotation.text;
 
-    // Extracting relevant information from the detected text
-    const identificationNumber = detections[0].description;
-    const name = detections[1].description;
-    const lastName = detections[2].description;
-    const dateOfBirth = detections[3].description;
-    const dateOfIssue = detections[4].description;
-    const dateOfExpiry = detections[5].description;
+      // Define a regular expression pattern to match the desired information
+      const pattern = /Thai National ID Card([\s\S]*?)Name([\s\S]*?)Last name([\s\S]*?)Date of Birth([\s\S]*?)Date of Issue([\s\S]*?)Date of Expiry([\s\S]*?)(?=\S|$)/;
 
-    // Creating the JSON output
-    const outputJson = {
-      identification_number: identificationNumber,
-      name: name,
-      last_name: lastName,
-      'date-of-birth': dateOfBirth,
-      'date-of-issue': dateOfIssue,
-      'date-of-expiry': dateOfExpiry,
-    };
+      // Use the pattern to extract matches from the text
+      const matches = extractedText.match(pattern);
 
-    return outputJson;
-  } catch (error) {
-    console.error('Error:', error);
-    return null;
-  }
-}
+      if (matches) {
+        const outputJson = {
+          identification_number: matches[1].trim(),
+          name: matches[2].trim(),
+          last_name: matches[3].trim(),
+          'date-of-birth': matches[4].trim(),
+          'date-of-issue': matches[5].trim(),
+          'date-of-expiry': matches[6].trim(),
+        };
 
-// Example usage with a local image file
-const imagePath = 'card.jpg_large';
-detectText(imagePath)
-  .then(result => {
-    if (result) {
-      console.log(result);
+        console.log(JSON.stringify(outputJson, null, 2));
+      } else {
+        console.log('No relevant information found.');
+      }
     } else {
       console.log('No text detected.');
     }
-  })
-  .catch(error => {
-    console.error('Error:', error);
-  });
+  } catch (error) {
+    console.error(error);
+  }
+}
 
+callAnnotateImage();
 //const detectText = async (file_path) => {
 //
 //    let [result] = await client.textDetection(file_path);
