@@ -52,9 +52,10 @@ callAnnotateImage = async (file_path) => {
   try {
     const [result] = await client.textDetection(file_path);
 
-   if (result.fullTextAnnotation && result.fullTextAnnotation.text) {
+   if (result.fullTextAnnotation && result.fullTextAnnotation.text)
+    {
       let  extractedText = result.fullTextAnnotation.text;
-   console.log(extractedText);
+   //console.log(extractedText);
        
    //removng thai charcters
       const thairemove=/[\u0E00-\u0E7F]/g;
@@ -93,19 +94,20 @@ callAnnotateImage = async (file_path) => {
             date_of_expiry: Date_of_Expiry
         };
        // console.log(JSON.stringify(outputJson, null, 2));
-       console.log(outputJson);
+      console.log(outputJson);
         return outputJson;
-      }
+      } 
       else{
         console.log('No relevant info found');
       }
     
   } catch (error) {
     console.error(error);
+    return null;
   }
 }
 
-callAnnotateImage('card.jpg_large');
+callAnnotateImage('c1.jpg');
 //const detectText = async (file_path) => {
 //
 //    let [result] = await client.textDetection(file_path);
