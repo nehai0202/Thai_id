@@ -12,7 +12,7 @@ class OCRRecordRepository {
         date_of_issue: issue_date,
        date_of_expiry: expiry_date,
       });
- console.log("abfakjbjgjhluhgbuygfutfd");
+ console.log("file created");
     //  console.log(name, lastname, identity_num, dob, issue_date, expiry_date);
       //console.log(new Date(dob));
       console.log(ocrRecord);
