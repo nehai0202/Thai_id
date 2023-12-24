@@ -4,11 +4,14 @@
   "description": "",
   "main": "code.js",
   "dependencies": {
-    "@google-cloud/vision": "^4.0.2"
+    "@google-cloud/vision": "^4.0.2",
+    "express": "^4.18.2",
+    "moment": "^2.29.4"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/server.js",
+    "server": "nodemon src/server.js"
   },
   "repository": {
     "type": "git",
