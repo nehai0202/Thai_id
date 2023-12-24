@@ -84,14 +84,18 @@ callAnnotateImage = async (file_path) => {
 
      let index_of_expiry= TextIndex(txt, "Date of Expiry") -1;
      let Date_of_Expiry = removesubstr(txt[index_of_expiry], "Date of Expiry");
+     const formatDate = (dateString) => {
+      const [day, month, year] = dateString.split(' ');
+      return `${day}/${month}/${year}`;
+  };
 
           const outputJson = {
           identification_number: Identification_Number ,
           name: Name,
           last_name: Last_Name,
-          date_of_birth: Date_of_Birth,
-            date_of_issue: Date_of_Issue,
-            date_of_expiry: Date_of_Expiry
+          date_of_birth:formatDate( Date_of_Birth),
+            date_of_issue: formatDate(Date_of_Issue),
+            date_of_expiry:formatDate (Date_of_Expiry)
         };
        // console.log(JSON.stringify(outputJson, null, 2));
       console.log(outputJson);
@@ -107,7 +111,7 @@ callAnnotateImage = async (file_path) => {
   }
 }
 
-callAnnotateImage('c1.jpg');
+callAnnotateImage('card.jpg_large');
 //const detectText = async (file_path) => {
 //
 //    let [result] = await client.textDetection(file_path);
