@@ -84,9 +84,29 @@ callAnnotateImage = async (file_path) => {
 
      let index_of_expiry= TextIndex(txt, "Date of Expiry") -1;
      let Date_of_Expiry = removesubstr(txt[index_of_expiry], "Date of Expiry");
+     
      const formatDate = (dateString) => {
       const [day, month, year] = dateString.split(' ');
-      return `${day}/${month}/${year}`;
+      const monthNumber = monthToNumber(month);
+      return `${day}/${monthNumber}/${year}`;
+  };
+
+  const monthToNumber = (month) => {
+      const monthMapping = {
+          'Jan.': '01',
+          'Feb.': '02',
+          'Mar.': '03',
+          'Apr.': '04',
+          'May': '05',
+          'Jun.': '06',
+          'Jul.': '07',
+          'Aug.': '08',
+          'Sep.': '09',
+          'Oct.': '10',
+          'Nov.': '11',
+          'Dec.': '12',
+      };
+      return monthMapping[month];
   };
 
           const outputJson = {
