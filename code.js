@@ -24,70 +24,88 @@ const CONFIG = {
         client_email: CREDENTIALS.client_email
     }
 };
-//const vision = require('@google-cloud/vision');
 
 
+function TextIndex(data, target) {
+  return data.findIndex(i => i.toLowerCase().includes(target.toLowerCase()));
+}
+function removesubstr(istr, toremove) {
+  return istr.replace(toremove, '');
+}
 
 // Create a client with the specified configuration
 const client = new vision.ImageAnnotatorClient(CONFIG);
-callAnnotateImage = async () => {
-  var imageFile = fs.readFileSync('card.jpg_large');
-  var encoded = Buffer.from(imageFile).toString('base64');
-
-  const request = {
-      "image": {
-          "content": encoded
-      },
-      "features": [
-        {
-          "type": "TEXT_DETECTION"
-        }
-      ],
-      "imageContext": {
-        "languageHints": ["en-t-i0-handwrit"]
-      }
-  };
+callAnnotateImage = async (file_path) => {
+  
+ //const request = {
+ //    
+ //    "features": [
+ //      {
+ //        "type": "TEXT_DETECTION"
+ //      }
+ //    ],
+ //    "imageContext": {
+ //      "languageHints": ["en-t-i0-handwrit"]
+ //    }
+ //};
 
   try {
-    const [result] = await client.annotateImage(request);
+    const [result] = await client.textDetection(file_path);
 
-    if (result.fullTextAnnotation && result.fullTextAnnotation.text) {
-      const extractedText = result.fullTextAnnotation.text;
+   if (result.fullTextAnnotation && result.fullTextAnnotation.text) {
+      let  extractedText = result.fullTextAnnotation.text;
+   console.log(extractedText);
+       
+   //removng thai charcters
+      const thairemove=/[\u0E00-\u0E7F]/g;
+      extractedText=extractedText.replace(thairemove,'');
+      
+      let txt=extractedText.split("\n");
 
-      // Define a regular expression pattern to match the desired information
-      const pattern = /Thai National ID Card([\s\S]*?)Name([\s\S]*?)Last name ([A-Za-z]+)([\s\S]*?)Date of Birth([\s\S]*?)Date of Issue([\s\S]*?)Date of Expiry([\s\S]*?)(?=\S|$)/;
+     txt=txt.filter(i=>i.trim() !=='' && /[a-zA-Z0-9]/.test(i)); //Remove strings which donot contain alphabets and empty strings
 
-      // Use the pattern to extract matches from the text
-      const matches = extractedText.match(pattern);
-      if (matches) {
-        // Extracted values may contain extra characters, so we need to clean them up
-        const cleanUp = (value) => value.replace(/[\n\s]+/g, ' ').trim();
+     let index_of_id=TextIndex(txt, "Thai National ID Card") + 1;
+     let Identification_Number = txt[index_of_id];
 
-        // Modify the cleanUp function to include substring operation for the first 16 characters
-        const cleanUpWithSubstring = (value, length) => cleanUp(value).substring(0, length);
+     
+     let index_of_name = TextIndex(txt, "Name");
+     let Name = removesubstr(txt[index_of_name], "Name ");
 
-        const outputJson = {
-          identification_number: cleanUpWithSubstring(matches[1], 16),
-          name: cleanUp(matches[2]),
-          last_name: cleanUp(matches[3]),
-          'date-of-birth': cleanUpWithSubstring(matches[5],12),
-          'date-of-issue': cleanUp(matches[5]),
-          'date-of-expiry': cleanUp(matches[4]), // Note: Update this line if needed
+     let index_of_last_name = TextIndex(txt, "Last name");
+     let Last_Name = removesubstr(txt[index_of_last_name], "Last name ");
+
+     let index_of_dob = TextIndex(txt, "Date of Birth");
+     let Date_of_Birth = removesubstr(txt[index_of_dob], "Date of Birth");
+   
+
+     let index_of_issue= TextIndex(txt, "Date of Issue") - 1;
+     let Date_of_Issue = removesubstr(txt[index_of_issue], "Date of Issue");
+
+     let index_of_expiry= TextIndex(txt, "Date of Expiry") -1;
+     let Date_of_Expiry = removesubstr(txt[index_of_expiry], "Date of Expiry");
+
+          const outputJson = {
+          identification_number: Identification_Number ,
+          name: Name,
+          last_name: Last_Name,
+          date_of_birth: Date_of_Birth,
+            date_of_issue: Date_of_Issue,
+            date_of_expiry: Date_of_Expiry
         };
-
-        console.log(JSON.stringify(outputJson, null, 2));
-      } else {
-        console.log('No relevant information found.');
+       // console.log(JSON.stringify(outputJson, null, 2));
+       console.log(outputJson);
+        return outputJson;
       }
-    } else {
-      console.log('No text detected.');
-    }
+      else{
+        console.log('No relevant info found');
+      }
+    
   } catch (error) {
     console.error(error);
   }
 }
 
-callAnnotateImage();
+callAnnotateImage('card.jpg_large');
 //const detectText = async (file_path) => {
 //
 //    let [result] = await client.textDetection(file_path);
