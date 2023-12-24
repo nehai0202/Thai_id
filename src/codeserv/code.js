@@ -42,7 +42,7 @@ function formatdate(datestr) {
 
 // Create a client with the specified configuration
 const client = new vision.ImageAnnotatorClient(CONFIG);
-callAnnotateImage = async (file_path) => {
+ const callAnnotateImage = async (file_path) => {
   
  //const request = {
  //    
@@ -83,30 +83,30 @@ callAnnotateImage = async (file_path) => {
      let Last_Name = removesubstr(txt[index_of_last_name], "Last name ");
 
      let index_of_dob = TextIndex(txt, "Date of Birth");
-     let Date_of_Birth = removesubstr(txt[index_of_dob], "Date of Birth");
+     let Date_of_Birth =formatdate( removesubstr(txt[index_of_dob], "Date of Birth"));
    
 
      let index_of_issue= TextIndex(txt, "Date of Issue") - 1;
-     let Date_of_Issue = removesubstr(txt[index_of_issue], "Date of Issue");
+     let Date_of_Issue = formatdate(removesubstr(txt[index_of_issue], "Date of Issue"));
 
      let index_of_expiry= TextIndex(txt, "Date of Expiry") -1;
-     let Date_of_Expiry = removesubstr(txt[index_of_expiry], "Date of Expiry");
+     let Date_of_Expiry =formatdate( removesubstr(txt[index_of_expiry], "Date of Expiry"));
 
    // const formatDate = (dateString) => {
    //  const [day, month, year] = dateString.split(' ');
    //  const monthNumber = monthToNumber(month);
    //  return `${day}/${monthNumber}/${year}`;
    //};
-
+console.log("tyoeeeeeeeeeeeeeeeeeee" + typeof(Date_of_Birth));
   
 
           const outputJson = {
           identification_number: Identification_Number ,
           name: Name,
           last_name: Last_Name,
-          date_of_birth: formatdate(Date_of_Birth),
-            date_of_issue: formatdate(Date_of_Issue),
-            date_of_expiry: formatdate(Date_of_Expiry)
+          date_of_birth: Date_of_Birth,
+           date_of_issue: Date_of_Issue,
+           date_of_expiry: Date_of_Expiry
         };
        // console.log(JSON.stringify(outputJson, null, 2));
       console.log(outputJson);
@@ -122,7 +122,7 @@ callAnnotateImage = async (file_path) => {
   }
 }
 
-callAnnotateImage('card.jpg_large');
+module.exports = callAnnotateImage;
 //const detectText = async (file_path) => {
 //
 //    let [result] = await client.textDetection(file_path);
