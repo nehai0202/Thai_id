@@ -1,3 +1,7 @@
+# OCR_Recognition-Thai-
+A full-stack MERN project for Thai ID card OCR identification using the Google Cloud Vision API.
+
+
 How the App looks
 ![image](https://github.com/nehai0202/qoala_assignment/assets/139651627/4b2c75c1-fe53-48df-8de3-4faa2ca512c9)
 
@@ -22,6 +26,51 @@ Deleting user whose id is given
 After no record is present(All id deleted)
 ![image](https://github.com/nehai0202/qoala_assignment/assets/139651627/92f7160b-1688-4806-a333-bb736d9c990c)
 
+### Installation
+1. **Initialization:**
+
+   ```bash
+   git init
+2. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/your-username/qoala_assignment.git
+## Backend Setup
+    cd Back
+    npm i
+    npm run dev
+## Frontend Setup
+    cd ..
+    cd Frontend
+    npm i
+    npm start
+
+### Prerequisites
+
+Ensure you have the following installed:
+
+- Node.js and npm
+- MongoDB
+- Google Cloud Vision API Key
+- Express
+- Multer
+- Middlwares
+- Axios
+
+## Usage
+1)So this is a full stack MERN project for thai id card ocr identification . Here you can upload your id card then it will show the details corresponding to it.
+2)You can also enter your identification number and get the records. Along with this you can delete that id record also.
+3)You can also get details of all records present in database.
+4) You can update the information like name , last name, date of birth, date of issue , date of expiry (All CRUD backend API are working correctly)
+
+## ALL BACKEND CRUD API ARE WORKING SUCCESSFULLY AND HAVE BEEN TESTED USING POSTMAN.
+
+## API Endpoints
+- POST /api/upload/  ---> Create and upload a new ID card entry.
+- PUT /api/:id       --->Update an existing ID card entry.
+- DELETE /api/:id    ---->Delete an ID card entry.
+- GET /api/         -----> Retrieve all ID card entries.
+- GET /api/:id      ------>Retrieve one ID card entry using it id.
 
 
 
