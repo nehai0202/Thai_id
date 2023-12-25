@@ -30,6 +30,7 @@ const setupAndStartServer = async () =>{
     app.use(bodyparser.urlencoded({extended : true}));
 
     app.use('/api', ApiRoutes);
+    
     app.get("/",(req,res)=>{
         res.send("api runing compleeetely ");
     })

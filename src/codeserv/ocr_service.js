@@ -25,6 +25,7 @@ class OCRService{
         }
     }
 
+    
     async updateRecord(name, lastname, identity_num, dob, issue_date, expiry_date){
         try {
             const ocr = await this.ocrRepository.updateRecord(name, lastname, identity_num, dob, issue_date, expiry_date);
@@ -38,6 +39,7 @@ class OCRService{
     async getRecord(identity_num){
         try {
             const ocr = await this.ocrRepository.getRecord(identity_num);
+            console.log("ocr is "+ocr);
             return ocr;
         } catch (error) {
             console.log("Error in services");
