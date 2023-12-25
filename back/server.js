@@ -5,6 +5,7 @@ const cors = require("cors");
 const multer = require("multer");
 const ApiRoutes = require("./routes/userroute");
 const dotenv = require("dotenv");
+const path=require('path');
 const { callAnnotateImage, OCRService } = require("./codeserv");
 //const { OCRService } = require("../codeserv/index");
 const OCRRecord = require('./model/ocr_record');
@@ -36,8 +37,22 @@ const setupAndStartServer = async () => {
       return cb(null, `${Date.now()}_${file.originalname}`);
     },
   });
- 
-
+ //-----------------deployment--------------------------------------------------------------
+   const __dirname1= path.resolve();
+   if(process.env.NODE_ENV=== "production")
+   {
+     app.use(express.static(path.join(__dirname1,"/frontend/build")));
+   app.get('*',(req,res)=>{
+    res.sendFile(path.resolve(__dirname1,"frontend","build","index.html"));
+   })
+   }
+   else
+   {
+     app.get("/",(req,res)=>{
+       res.send("API running successfully")
+     })
+   }
+// -------------deployment----------------------------------------------------------
   app.post("/api/upload", upload.single("file"), async (req, res) => {
     try {
       console.log(req.file);

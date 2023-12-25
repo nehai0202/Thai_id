@@ -30,11 +30,21 @@ const App = () => {
   const handleUpdate = async () => {
     try {
       const response = await axios.put(`http://localhost:5000/api/${identificationNumber}`, updateData);
-      setUserData([response.data.data]);
+      const updatedUser = response.data.data;
+  
+      // Update the userData array with the new data
+      setUserData((prevUsers) => {
+        // Replace the existing user with the updated user
+        return prevUsers.map((user) =>
+          user._id === updatedUser._id ? updatedUser : user
+        );
+      });
     } catch (error) {
       console.error('Error updating user data:', error);
     }
   };
+  
+  
 
   const handleIdUpload = async (image) => {
     setUploadId(image);
@@ -99,11 +109,11 @@ const App = () => {
 
   return (
     <div className="container">
-      <h1>OCR Assign</h1>
+      <h1>THAI ID CARD OCR</h1>
 
       <div>
         <IdUploader onIdUploadReq={handleIdUpload} />
-        {uploadId && <img className="uploaded-image" src={URL.createObjectURL(uploadId)} alt="Uploaded"  style={{ maxWidth: '100%', height: 'auto' }}/>}
+        {uploadId && <img className="uploaded-image" src={URL.createObjectURL(uploadId)} alt="Uploaded"  style={{ maxWidth: '50%', height: 'auto' }}/>}
         <JsonOutput ocrData={ocrData} />
       </div>
 
@@ -127,6 +137,10 @@ const App = () => {
             <p>Name: {user.name}</p>
             <p>Last Name: {user.last_name}</p>
             <p>ID: {user.identification_number}</p>
+            <p>Date of birth: {user.date_of_birth}</p>
+            <p>Date of Issue: {user.date_of_issue}</p>
+            <p>Date of Expiry: {user.date_of_expiry}</p>
+
           {/* Display other user details similarly */}
           <button className="action-button" onClick={deleteUserById}>Delete User</button>
 
