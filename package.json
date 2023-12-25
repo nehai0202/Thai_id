@@ -16,8 +16,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node back/server.js --ignore client",
-    "build":"npm install --legacy-peer-deps && npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend"
+    "start": "node back/server.js ",
+    "build":"npm install  && npm install  --prefix frontend && npm run build --prefix frontend"
   },
   "repository": {
     "type": "git",
