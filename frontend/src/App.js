@@ -75,12 +75,13 @@ const App = () => {
   const deleteUserById = async () => {
     try {
       await axios.delete(`http://localhost:5000/api/${identificationNumber}`);
-      // Refresh the user data after deletion
-      getAllUsers();
+      // Filter out the deleted user from the existing userData state
+      setUserData((prevData) => prevData.filter((user) => user.identification_number !== identificationNumber));
     } catch (error) {
       console.error('Error deleting user:', error);
     }
   };
+  
 
   const updateUserData = async () => {
     // Assuming you have a form or modal to collect updated user data
@@ -117,12 +118,15 @@ const App = () => {
         <button className="action-button" onClick={getAllUsers}>Get All Users</button>
       </div>
 
-      {userData.map((user) => (
-        <div key={user._id} className="user-details">
-          {/* Display user details */}
-          <p>Name: {user.name}</p>
-          <p>Last Name: {user.last_name}</p>
-          <p>ID: {user.identification_number}</p>
+      {userData.length === 0 ? (
+        <p>No users in the database</p>
+      ) : (
+        userData.map((user) => (
+          <div key={user._id} className="user-details">
+            {/* Display user details */}
+            <p>Name: {user.name}</p>
+            <p>Last Name: {user.last_name}</p>
+            <p>ID: {user.identification_number}</p>
           {/* Display other user details similarly */}
           <button className="action-button" onClick={deleteUserById}>Delete User</button>
 
@@ -136,11 +140,12 @@ const App = () => {
             />
             {/* Add similar input fields for other attributes */}
             <button type="button" className="action-button" onClick={handleUpdate}>
-              Save Updated Data
-            </button>
-          </form>
-        </div>
-      ))}
+                Save Updated Data
+              </button>
+            </form>
+          </div>
+        ))
+      )}
     </div>
   );
 };
