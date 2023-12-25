@@ -109,8 +109,9 @@ const deleteUser = async (req, res) => {
 const updateUser = async (req, res) => {
     try {
         // Assuming req.params.id is the identification number
-        const identificationNumber = req.params.id;
+         const identificationNumber = req.params.id;
         console.log("id nooo" + identificationNumber);
+       
 
         // Use findOneAndUpdate with the identification number
         const response = await OCRRecord.findOneAndUpdate(
