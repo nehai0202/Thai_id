@@ -72,6 +72,24 @@ Ensure you have the following installed:
 - GET /api/         -----> Retrieve all ID card entries.
 - GET /api/:id      ------>Retrieve one ID card entry using it id.
 
+## Run the Project
 
+To deploy and run the application:
+
+1. Create a `.env` file in the root directory with two environmental variables:
+    - `PORT`: Relevant port number
+    - `MONGO_URL`: MongoDB database URL
+
+2. Create an account on Google Cloud Platform.
+
+3. Enable the Google Vision API.
+
+4. Create a service account and get the JSON credential.
+
+5. Rename the credential file as 'credential.json'.
+
+6. In the terminal, run `npm install` to install the required packages.
+
+7. To start the project, run `npm start`.
 
 
