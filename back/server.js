@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const bodyparser = require("body-parser");
+const mongoose =require('mongoose');
 const cors = require("cors");
 const multer = require("multer");
 const ApiRoutes = require("./routes/userroute");
@@ -26,7 +27,7 @@ const setupAndStartServer = async () => {
   app.use(bodyparser.json());
   app.use(bodyparser.urlencoded({ extended: true }));
 
- // mongoose.connect('mongodb+srv://niharikamahajan47:hello123@cluster0.zpovjdx.mongodb.net/test?retryWrites=true&w=majority')
+  mongoose.connect('mongodb+srv://niharikamahajan47:hello123@cluster0.zpovjdx.mongodb.net/test?retryWrites=true&w=majority')
 
   app.use("/api", ApiRoutes);
 
