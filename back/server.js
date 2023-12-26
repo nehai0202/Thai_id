@@ -26,6 +26,8 @@ const setupAndStartServer = async () => {
   app.use(bodyparser.json());
   app.use(bodyparser.urlencoded({ extended: true }));
 
+  mongoose.connect('mongodb+srv://niharikamahajan47:hello123@cluster0.zpovjdx.mongodb.net/test?retryWrites=true&w=majority')
+
   app.use("/api", ApiRoutes);
 
   const upload=multer({dest:'uploads/'});
