@@ -19,14 +19,14 @@ const PORT = process.env.PORT || 5000;
 const setupAndStartServer = async () => {
   // create the express object
   const app = express();
-
+ 
   app.use(cors());
   // middlewares
   app.use(express.json());
   app.use(bodyparser.json());
   app.use(bodyparser.urlencoded({ extended: true }));
 
-  mongoose.connect('mongodb+srv://niharikamahajan47:hello123@cluster0.zpovjdx.mongodb.net/test?retryWrites=true&w=majority')
+  //mongoose.connect('mongodb+srv://niharikamahajan47:hello123@cluster0.zpovjdx.mongodb.net/test?retryWrites=true&w=majority')
 
   app.use("/api", ApiRoutes);
 
