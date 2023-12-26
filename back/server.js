@@ -12,12 +12,13 @@ const { callAnnotateImage, OCRService } = require("./codeserv");
 const OCRRecord = require('./model/ocr_record');
 const ocrService = new OCRService();
 
-dotenv.config();
+
+
+const setupAndStartServer = async () => {
+  dotenv.config();
 connectDB();
 
 const PORT = process.env.PORT || 5000;
-
-const setupAndStartServer = async () => {
   // create the express object
   const app = express();
  
