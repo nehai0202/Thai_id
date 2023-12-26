@@ -16,7 +16,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node server.js ",
+    "start": "node back/server.js ",
     "frontend":"npm start --prefix ./frontend",
     "dev":"concurrently \"npm start\"npm run frontend\""
   },
