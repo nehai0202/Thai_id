@@ -28,7 +28,7 @@ const PORT = process.env.PORT || 5000;
   app.use(bodyparser.json());
   app.use(bodyparser.urlencoded({ extended: true }));
 
-  mongoose.connect('mongodb+srv://niharikamahajan47:hello123@cluster0.zpovjdx.mongodb.net/test?retryWrites=true&w=majority')
+  //mongoose.connect('mongodb+srv://niharikamahajan47:hello123@cluster0.zpovjdx.mongodb.net/test?retryWrites=true&w=majority')
 
   app.use("/api", ApiRoutes);
 
@@ -42,20 +42,25 @@ const PORT = process.env.PORT || 5000;
     },
   });
  //-----------------deployment--------------------------------------------------------------
-    const __dirname1= path.resolve();
-    if(process.env.NODE_ENV=== "production")
-    {
-      app.use(express.static(path.join(__dirname1,"/frontend/build")));
-    app.get('*',(req,res)=>{
-     res.sendFile(path.resolve(__dirname1,"frontend","build","index.html"));
-    })
-    }
-    else
-    {
-      app.get("/",(req,res)=>{
-        res.send("API running successfully")
-      })
-     }
+  // const __dirname1= path.resolve();
+  // if(process.env.NODE_ENV=== "production")
+  // {
+  //   app.use(express.static(path.join(__dirname1,"/frontend/build")));
+  // app.get('*',(req,res)=>{
+  //  res.sendFile(path.resolve(__dirname1,"frontend","build","index.html"));
+  // })
+  // }
+  // else
+  // {
+  //   app.get("/",(req,res)=>{
+  //     res.send("API running successfully")
+  //   })
+  //  }
+
+  app.use(express.static(path.join(__dirname,"./frontend/build")));
+  app.get("*",function(req,res){
+    res.sendFile(path.join(__dirname,"./frontend/build/index.html"))
+  })
 // -------------deployment----------------------------------------------------------
   app.post("/api/upload", upload.single("file"), async (req, res) => {
     try {
