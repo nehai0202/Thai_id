@@ -16,7 +16,8 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node back/server.js "
+    "start": "node back/server.js ",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
    
   },
   "repository": {
